@@ -12,8 +12,11 @@ from PIL import Image
 import cv2
 
 #%% Charger le modèle depuis le fichier pickle
-model = pickle.load(open('model.pkl', 'rb'))
-
+try:
+    model = pickle.load(open('model.pkl', 'rb'))
+except:
+    model = pickle.load(open('/app/streamlit-image-classification/script/model.pkl', 'rb'))
+    
 
 #%% Définition de fonctions pour l'application
 def classify_image(x_val):
