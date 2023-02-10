@@ -13,8 +13,8 @@ The data were downloaded from this google drive: https://drive.google.com/file/d
 1. Clone this repository
 2. Install the necessary package
 3. Go into the `\script` folder
-4.a. you can learn the model by using the script `classify.py`
-4.b. you can classify a new image using the streamlit interface by launching in command line `streamlit run image_recognition_streamlit.py`
+4. (a) you can learn the model by using the script `classify.py`
+4. (b) you can classify a new image using the streamlit interface by launching in command line `streamlit run image_recognition_streamlit.py`
 
 
 # Organization
