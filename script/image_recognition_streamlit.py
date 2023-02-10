@@ -16,27 +16,17 @@ import os
 #%% Charger le modèle depuis le fichier pickle
 
 url = r'https://github.com/malganis35/streamlit-image-classification/blob/master/script/model.pkl?raw=true'    
+model_tmp_filename = "model_tmp.pkl"
 
-# try:
-#     model = pickle.load(open('model.pkl', 'rb'))    
-#     # model = pickle.load(open('/app/streamlit-image-classification/script/model.pkl', 'rb'))
-# except:
-#     urllib.request.urlretrieve(url, "model_tmp.pkl")
-#     model = pickle.load(open('model_tmp.pkl', 'rb'))    
-
-if os.path.isfile("model_tmp.pkl")==False:
+if os.path.isfile("model.pkl")==False:
     print("Le modèle n'existe pas en local. Téléchargement du modèle")
-    urllib.request.urlretrieve(url, "model_tmp.pkl")
+    urllib.request.urlretrieve(url, model_tmp_filename)
 else:
     print("Le modèle est déjà disponible")
+    model_tmp_filename = 'model.pkl'
+    
+model = pickle.load(open(model_tmp_filename, 'rb'))      
 
-model = pickle.load(open('model_tmp.pkl', 'rb'))    
-
-# model = pickle.load(urllib.request.urlopen(url))
-
-# model = pickle.load(urllib.request.urlopen("https://drive.google.com/open?id=1M7Dt7CpEOtjWdHv_wLNZdkHw5Fxn83vW","rb"))
-# model = pickle.load(urllib.request.urlopen(url))
-# model = pickle.load(open('model.pkl', 'rb'))
 
 #%% Définition de fonctions pour l'application
 def classify_image(x_val):
@@ -93,17 +83,15 @@ st.set_page_config(page_title="Classification d'image", page_icon=":camera:", la
 st.image("../images/logo_mazars.png", width=200)
 
 # Trait en gris clair
-st.empty()
 st.markdown("---", unsafe_allow_html=True)
 
 # Titre
 st.title("Classification d'image")
-st.text("Author: Mazars Data Services - Cao Tri DO")
-st.empty()
+st.text("Author: Mazars Data Services - Cao Tri DO, PhD")
 st.markdown("*Exemple d'une démonstration pour classifier des images d'avions et de voitures*")
 # Trait en gris clair
-st.empty()
 st.markdown("---", unsafe_allow_html=True)
+st.empty()
 
 # Bouton de chargement d'image
 uploaded_file = st.file_uploader("Choisissez une image à classer", type=["jpg", "jpeg", "png"])
@@ -111,9 +99,11 @@ uploaded_file = st.file_uploader("Choisissez une image à classer", type=["jpg",
 # Si le fichier n'est pas vide
 if uploaded_file is not None:
     
+    col1, col2 = st.columns(2)
+    
     # Charge l'image et l'affiche à l'écran
     image = Image.open(uploaded_file)
-    st.image(image, caption='Image chargée', use_column_width=False)
+    col2.image(image, caption='Image à classifier', use_column_width=False)
 
     # Convertit au format du modèle
     x_val = load_image( image )
@@ -122,5 +112,18 @@ if uploaded_file is not None:
     prediction = classify_image(x_val)
 
     # Affiche le résultat de la prédiction
-    st.write("Prédiction:", prediction)
+    # st.write("Prédiction:", prediction)
+    original_title = '<p style="font-family:Arial; color:Black; font-size: 20px;">Prediction</p>'
+    col1.markdown(original_title, unsafe_allow_html=True)
+    
+    html_str = f"""
+    <style>
+    p.a {{
+      font: bold 30px Arial;
+      color:Red; 
+    }}
+    </style>
+    <p class="a">{prediction}</p>
+    """
+    col1.markdown(html_str, unsafe_allow_html=True)
     
