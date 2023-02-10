@@ -10,17 +10,33 @@ import pickle
 import numpy as np
 from PIL import Image
 import cv2
+import urllib.request
+import os
 
 #%% Charger le modèle depuis le fichier pickle
-"""
-try:
-    model = pickle.load(open('/app/streamlit-image-classification/script/model.pkl', 'rb'))
-except:
-    model = pickle.load(open('model.pkl', 'rb'))
-"""
 
-model = pickle.load(open('/app/streamlit-image-classification/script/model.pkl', 'rb'))
-    
+url = r'https://github.com/malganis35/streamlit-image-classification/blob/master/script/model.pkl?raw=true'    
+
+# try:
+#     model = pickle.load(open('model.pkl', 'rb'))    
+#     # model = pickle.load(open('/app/streamlit-image-classification/script/model.pkl', 'rb'))
+# except:
+#     urllib.request.urlretrieve(url, "model_tmp.pkl")
+#     model = pickle.load(open('model_tmp.pkl', 'rb'))    
+
+if os.path.isfile("model_tmp.pkl")==False:
+    print("Le modèle n'existe pas en local. Téléchargement du modèle")
+    urllib.request.urlretrieve(url, "model_tmp.pkl")
+else:
+    print("Le modèle est déjà disponible")
+
+model = pickle.load(open('model_tmp.pkl', 'rb'))    
+
+# model = pickle.load(urllib.request.urlopen(url))
+
+# model = pickle.load(urllib.request.urlopen("https://drive.google.com/open?id=1M7Dt7CpEOtjWdHv_wLNZdkHw5Fxn83vW","rb"))
+# model = pickle.load(urllib.request.urlopen(url))
+# model = pickle.load(open('model.pkl', 'rb'))
 
 #%% Définition de fonctions pour l'application
 def classify_image(x_val):
