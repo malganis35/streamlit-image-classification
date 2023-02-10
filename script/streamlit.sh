@@ -1,0 +1,1 @@
+streamlit run image_recognition_streamlit.py
